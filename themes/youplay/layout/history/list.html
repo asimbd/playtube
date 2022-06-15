@@ -1,0 +1,27 @@
+<div class="col-lg-3 col-md-4 col-sm-6 video-wrapper" data-id="{{ID}}" id="video-{{ID}}">
+	<div class="content">
+		<div class="video-thumb">
+			<a href="{{URL}}" data-load="?link1=watch&id={{VIDEO_ID_}}">
+				<img src="{{THUMBNAIL}}" alt="{{TITLE}}">
+				<span class="time">{{TIME}}</span>
+			</a>
+		</div>
+		<div class="video-info">
+			<div class="video-actions">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="feather feather-trash" onclick="PT_DeleteHistory({{ID}})" title="Delete video"><path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" /></svg>
+			</div>
+			<div>
+				<div class="author-info">
+					<div class="author-name">
+						<a href="{{USER url}}" data-load="?link1=timeline&id={{USER username}}">{{USER name_v}}</a>
+					</div> 
+					<div class="clear"></div>
+				</div>
+				<div class="video-title">
+					<a href="{{URL}}" title="{{TITLE}}" data-load="?link1=watch&id={{VIDEO_ID_}}">{{TITLE}}</a> 
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>

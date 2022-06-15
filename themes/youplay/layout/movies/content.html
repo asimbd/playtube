@@ -1,0 +1,132 @@
+<link rel="stylesheet" href="{{CONFIG theme_url}}/css/night-mode.css">
+
+<div class="pt_movie_margin">
+	<?php if ($pt->total_pages > 0) { ?>
+		<div class="upload-head">
+			<h3 class="text-center"><span><svg class="feather feather-film" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg></span> {{LANG movies}}</h3>
+			<div class="clear"></div>
+		</div>
+	<?php } ?>
+	<div class="vid_move_filtr" id="filter_settings">
+		<form class="search_filter_form pt_forms" method="GET" action="{{LINK movies}}">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label for="">Search Term:</label>
+						<div class="input-group">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M23.707 22.293l-5.969-5.969a10.016 10.016 0 10-1.414 1.414l5.969 5.969a1 1 0 001.414-1.414zM10 18a8 8 0 118-8 8.009 8.009 0 01-8 8z"></path></svg>
+							<input type="text" class="form-control" id="search-bar" name="keyword" placeholder="{{LANG movies_page_search}}" autocomplete="off" value="<?php echo(!empty($_GET['keyword']) ? $_GET['keyword'] : '') ?>"> 
+							<span class="input-group-btn">
+								<button id="submit" class="btn btn-main">{{LANG search}}</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="form-group">
+						<label for="rating">{{LANG rating}}</label>
+						<input type="number" id="rating" name="rating" class="form-control" min="1" max="10" step="0.1" placeholder="{{LANG rating}}" value="<?php echo(!empty($_GET['rating']) ? $_GET['rating'] : '') ?>">
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="form-group">
+						<label for="release">{{LANG release}}</label>
+						<input id="release" name="release" type="number" placeholder="{{LANG release}}" class="form-control"  min="1960" max="<?php echo date('Y') ?>" value="<?php echo(!empty($_GET['release']) ? $_GET['release'] : '') ?>">
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="form-group">
+						<label for="country">{{LANG country}}</label>
+						<select class="form-control show-tick" id="country" name="country">
+							<?php foreach ($countries_name as $key => $value) { $selected = (!empty($_GET['country']) && $_GET['country'] == $key) ? 'selected' : '';  ?>
+								<option value="<?php echo $key; ?>" <?php echo $selected?>><?php echo $value; ?></option>
+							<?php  } ?>
+						</select>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="form-group">
+						<label for="category_">{{LANG category}}</label>
+						<select class="form-control show-tick" id="category_" name="category_">
+							<option value="all" <?php echo !empty($_GET['category_']) && $_GET['category_'] == 'all' ? 'selected' : '' ?>>{{LANG all}}</option>
+							<?php foreach ($pt->movies_categories as $key => $category) { $selected = (!empty($_GET['category_']) && $_GET['category_'] == $key) ? 'selected' : '';  ?>
+								<option value="<?php echo $key; ?>" <?php echo $selected?>><?php echo $category; ?></option>
+							<?php  } ?>
+						</select>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" name="page_id" value="1" id="page_id">
+		</form>
+	</div>
+
+
+	<div class="">
+		
+		<div class="subscriptions-list">
+			<div class="row author-list pt_movie_list">
+				{{VIDEOS}}
+			</div>
+			<?php if ($pt->total_pages > 1) { ?>
+			<div>
+				<hr>
+				<div class="pull-left showing_pages">
+		        	<?php echo "Showing $pt->page_number out of " . $pt->total_pages; ?>
+		        </div>
+		        <div class="pull-right">
+		        	<nav class="showing_nav">
+		                <ul class="pagination">
+		                	<li>
+		                        <a href="javascript:void(0)" class="waves-effect" title='First Page' onclick="GoToPage(1)">
+		                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-left"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+		                        </a>
+		                    </li>
+		                    <?php if ($pt->page_number > 1) {  ?>
+		                    <li>
+		                        <a href="javascript:void(0)" onclick="GoToPage(<?php echo($pt->page_number - 1) ?>)" class="waves-effect" title='Previous Page'>
+		                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>
+		                        </a>
+		                    </li>
+		                    <?php  } ?>
+		                    <?php 
+		                    $nums = 0;
+		                    $nums_pages = ($pt->page_number > 3) ? ($pt->page_number - 3) : $pt->page_number;
+		                    for ($i=$nums_pages; $i <= $pt->total_pages; $i++) { 
+		                    	if ($nums < 4) {
+		                    	?>
+		                    	<li class="<?php echo ($pt->page_number == $i) ? 'active' : ''; ?>"><a href="javascript:void(0)" onclick="GoToPage(<?php echo($i); ?>)" class="waves-effect"><?php echo $i ?></a></li>
+		                    	<?php
+		                    	}
+		                    	$nums++;
+		                    }
+		                    ?>
+		                    <?php if ($pt->total_pages > $pt->page_number) { ?>
+		                    <li>
+		                        <a href="javascript:void(0)" onclick="GoToPage(<?php echo ($pt->page_number + 1); ?>)" class="waves-effect" title="Next Page">
+		                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+		                        </a>
+		                    </li>
+		                    <?php } ?>
+		                    <li>
+		                        <a href="javascript:void(0)" onclick="GoToPage(<?php echo($pt->total_pages) ?>)" class="waves-effect" title='Last Page'>
+		                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+		                        </a>
+		                    </li>
+		                </ul>
+		            </nav>
+		        </div>
+			</div>
+		        
+        <?php } ?>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+</div>
+<br>
+<script type="text/javascript">
+function GoToPage(page_id) {
+	$('#page_id').val(page_id)
+	$('#submit').click();
+}
+</script>

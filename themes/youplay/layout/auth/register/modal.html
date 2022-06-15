@@ -1,0 +1,106 @@
+<div class="modal fade pt_auth_box" id="registerbox" tabindex="-1" role="dialog" aria-labelledby="registerbox">
+	<div class="modal-dialog" role="document">
+		<div class="login_page">
+			<div class="login-page">
+				<div class="login-form">
+					<h4>{{LANG sign_up}}</h4>
+					<form action="{{LINK register}}" method="POST">
+						<div class="errors form-group"></div>
+						<div class="errors success form-group"></div>
+						<div class="pp_mat_input">
+							<input type="text" name="username" id="username" placeholder="{{LANG username}}" required autofocus>
+							<label for="username">{{LANG username}}</label>
+						</div>
+						<div class="pp_mat_input">
+							<input type="email" name="email" id="email" placeholder="{{LANG email_address}}" required>
+							<label for="email">{{LANG email_address}}</label>
+						</div>
+						<div class="pp_mat_input">
+							<input type="password" name="password" id="password" placeholder="{{LANG password}}" required>
+							<label for="password">{{LANG password}}</label>
+						</div>
+						<div class="pp_mat_input">
+							<input type="password" name="c_password"  id="c_password" placeholder="{{LANG confirm_password}}" required>
+							<label for="c_password">{{LANG confirm_password}}</label>
+						</div>
+						<div class="pp_mat_input">
+							<select name="gender" id="gender" required>
+								<option value="male">{{LANG male}}</option>
+								<option value="female">{{LANG female}}</option>
+							</select>
+						</div>
+						<?php 
+						$pt->custom_fields = $db->where('registration_page','1')->get(T_FIELDS);
+						if (!empty($pt->custom_fields)) {
+						    foreach ($pt->custom_fields as $field) {
+						    $field_id       = $field->id; ?>
+						    	<div class="form-group">
+								      <?php if ($field->type == 'select'): ?>
+								            <?php $options = @explode(',', $field->options);?>
+								            <div class="pp_mat_input">
+									            <select name="<?php echo("fid_$field_id") ?>" id="" class="form-control">
+									                  <?php foreach ($options as $key => $value): ?>
+									                        <option value="<?php echo $key + 1;?>">
+									                              <?php echo $value;?>
+									                        </option>
+									                  <?php endforeach; ?>
+									            </select>
+									        </div>
+								      <?php elseif($field->type == 'textbox'): ?>
+								      	<div class="pp_mat_input">
+											<input  name="<?php echo("fid_$field_id") ?>" type="text" placeholder="<?php echo($field->name) ?>" class="form-control">
+											<label for="<?php echo("fid_$field_id") ?>"><?php echo($field->name) ?></label>
+										</div>
+								      <?php elseif($field->type == 'textarea'): ?>
+								      	<div class="pp_mat_input">
+								            <textarea style="resize: vertical;" name="<?php echo("fid_$field_id") ?>" cols="20" rows="3" placeholder="<?php echo($field->name) ?>" class="form-control"></textarea>
+								            <label for="<?php echo("fid_$field_id") ?>"><?php echo($field->name) ?></label>
+								        </div>
+								      <?php endif; ?>
+								</div>
+						<?php } } ?>
+						<div class="recaptcha">
+							<?php if ($pt->config->recaptcha == 'on') { ?>
+								<div class="g-recaptcha" data-sitekey="<?php echo($pt->config->recaptcha_key) ?>"></div>
+							<?php } ?>
+						</div>
+						<div class="login_signup_combo">
+							<input type="submit" class="btn btn-main button" value="{{LANG sign_up}}">
+						</div>
+						<div class="terms">
+							<label for="accept_terms">
+								<input type="checkbox" name="accept_terms" id="accept_terms">{{LANG terms_agreement}}
+								<a href="{{LINK terms/terms}}">{{LANG terms_of_use}}</a> & <a href="{{LINK terms/privacy-policy}}">{{LANG privacy_policy}}</a>
+							</label>
+							<div class="clear"></div>
+						</div>
+						<hr>
+						<div class="signup__">
+							{{LANG already_have_account}} <a class="dec" href="{{LINK login}}">{{LANG login_}}</a>
+						</div>
+						<input type="hidden" id="checked" value="off" name="terms">
+						<?php if (isset($_GET['invite'])): ?>
+							<input type="text" class="hidden" value="<?php echo $_GET['invite']; ?>" name="invited">
+						<?php endif; ?>
+					</form>
+				</div>    
+			</div>
+		</div>
+		<script>
+		$(function() {
+			$("#accept_terms").change(function() {
+				if(this.checked) {
+					$('#checked').val('on');
+				} else {
+					$('#checked').val('off');
+				}
+			});
+			$('.button').on('click', function () {
+				if ($('#username').val() && $('#password').val() && $('#email').val() && $('#gender').val() && $('#c_password').val()) {
+					$(this).val("{{LANG please_wait}}");
+				}
+			});
+		});
+		</script>
+	</div>
+</div>

@@ -1,0 +1,158 @@
+<div class="container-fluid">
+    <div>
+        <h3>Advertisement System Settings</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Admin Panel</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Advertisement System Settings</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="alert alert-info">
+       <strong>Info: </strong> For more information on how advertisement system works, please visit our <a href="https://docs.playtubescript.com/#Monetization" target="_blank">documentation</a> page.
+   </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6 ">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Advertisement Settings</h6>
+                    <div class="email-settings-alert"></div>
+                    <form class="email-settings" method="POST">
+                        <div class="float-left">
+                            <label for="user_ads" class="main-label">Advertisement System</label>
+                            <br><small class="admin-info">Allow users to create ads.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="user_ads" value="off" />
+                            <input type="checkbox" name="user_ads" id="chck-user_ads" value="on" <?php echo ($pt->config->user_ads == 'on') ? 'checked': '';?>>
+                            <label for="chck-user_ads" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Cost Per View</label>
+                                <input type="text" name="ad_v_price" class="form-control" value="<?php echo ($pt->config->ad_v_price);?>">
+                                <small class="admin-info">Set a price for ad impressions.</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Cost Per Click</label>
+                                <input type="text" name="ad_c_price" class="form-control" value="<?php echo ($pt->config->ad_c_price);?>">
+                                <small class="admin-info">Set a price for ad clicks.</small>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="float-left">
+                            <label for="usr_v_mon" class="main-label">Video Monetization</label>
+                            <br><small class="admin-info">Allow users to monetize their videos.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="usr_v_mon" value="off" />
+                            <input type="checkbox" name="usr_v_mon" id="chck-usr_v_mon" value="on" <?php echo ($pt->config->usr_v_mon == 'on') ? 'checked': '';?>>
+                            <label for="chck-usr_v_mon" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="float-left">
+                            <label for="user_mon_approve" class="main-label">Video Monetization Approval System</label>
+                            <br><small class="admin-info">Approve users video monetizations.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="user_mon_approve" value="off" />
+                            <input type="checkbox" name="user_mon_approve" id="chck-user_mon_approve" value="on" <?php echo ($pt->config->user_mon_approve == 'on') ? 'checked': '';?>>
+                            <label for="chck-user_mon_approve" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                         <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Publisher Earning</label>
+                                <input type="text" name="pub_price" class="form-control" value="<?php echo ($pt->config->pub_price);?>">
+                                <small class="admin-info">How much a video publisher will earn from each ad? Price should not be higher than Cost Per Click</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+    $('.switcher input[type=checkbox]').click(function () {
+        var configName = $(this).attr('name');
+        var hash_id = $('input[name=hash_id]').val();
+        var objData = {};
+        if ($(this).is(":checked") === true) {
+            objData[configName] = $(this).val();
+        }
+        else{
+            if ($('input[name='+configName+']')[0]) {
+                objData[configName] = $($('input[name='+configName+']')[0]).val();
+            }
+        }
+        objData['hash_id'] = hash_id;
+        $.post('{{LINK aj/ap/save-settings}}', objData);
+    });
+
+    var setTimeOutColor = setTimeout(function (){});
+    $('select').on('change', function() {
+         clearTimeout(setTimeOutColor);
+        var thisElement = $(this);
+        var configName = thisElement.attr('name');
+        var hash_id = $('input[name=hash_id]').val();
+        var objData = {};
+        objData[configName] = this.value;
+        objData['hash_id'] = hash_id;
+        thisElement.addClass('warning');
+        $.post("{{LINK aj/ap/save-settings}}", objData, function (data) {
+            if (data.status == 200) {
+                thisElement.removeClass('warning');
+                thisElement.addClass('success');
+            } else {
+                thisElement.addClass('error');
+            }
+            var setTimeOutColor = setTimeout(function () {
+                thisElement.removeClass('success');
+                thisElement.removeClass('warning');
+                thisElement.removeClass('error');
+            }, 2000);
+        });
+    });
+    $('input[type=text], input[type=number] , textarea').on('keyup', delay(function() {
+            clearTimeout(setTimeOutColor);
+            var thisElement = $(this);
+            var configName = thisElement.attr('name');
+            var hash_id = $('input[name=hash_id]').val();
+            var objData = {};
+            objData[configName] = this.value;
+            objData['hash_id'] = hash_id;
+            thisElement.addClass('warning');
+            $.post("{{LINK aj/ap/save-settings}}", objData, function (data) {
+                if (data.status == 200) {
+                    thisElement.removeClass('warning');
+                    thisElement.addClass('success');
+                } else {
+                    thisElement.addClass('error');
+                }
+                var setTimeOutColor = setTimeout(function () {
+                    thisElement.removeClass('success');
+                    thisElement.removeClass('warning');
+                    thisElement.removeClass('error');
+                }, 2000);
+                //thisElement.focus();
+            });
+    }, 500));
+});
+</script>

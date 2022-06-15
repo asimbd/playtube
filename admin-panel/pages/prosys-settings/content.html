@@ -1,0 +1,236 @@
+<div class="container-fluid">
+    <div>
+        <h3>Settings</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Admin Panel</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Pro System</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Settings</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-8 col-md-8 ">
+            <div class="card">
+                <div class="card-body">
+					<button class="btn btn-danger pull-right" onclick="PT_RemoveSubscriptions('expired',this);">Cancel Expired Subscriptions</button>
+                    <h6 class="card-title">Pro System Settings</h6>
+                    <div class="clearfix"></div>
+                    <div class="prosys-settings-alert"></div>
+                    <div class="alert alert-warning">
+                         <strong>Note:</strong> To enable recurring payments, please follow the steps below, and use the link listed: <br>
+                            <br>
+                            Link: {{CONFIG site_url}}/pro.php<br>
+                            <br>
+                            <a href="{{CONFIG site_url}}/upload/step1.png" target="_blank">Step1</a>
+                            <br>
+                            <a href="{{CONFIG site_url}}/upload/step2.png" target="_blank">Step2</a>
+                      </div>
+                    <form class="prosys-settings" method="POST">
+                        <div class="float-left">
+                            <label for="go_pro" class="main-label">Pro System</label>
+                            <br><small class="admin-info">Enable extra features with Pro System & get paid.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="go_pro" value="off" />
+                            <input type="checkbox" name="go_pro" id="chck-go_pro" value="on" <?php echo ($pt->config->go_pro == 'on') ? 'checked': '';?>>
+                            <label for="chck-go_pro" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="float-left">
+                            <label for="recurring_payment" class="main-label">Recurring Payment</label>
+                            <br><small class="admin-info">Enable automatic payments (cronjob)</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="recurring_payment" value="off" />
+                            <input type="checkbox" name="recurring_payment" id="chck-recurring_payment" value="on" <?php echo ($pt->config->recurring_payment == 'on') ? 'checked': '';?>>
+                            <label for="chck-recurring_payment" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                         <div class="float-left">
+                            <label for="require_subcription" class="main-label">Require Subscription To Access Site<small></small></label>
+                            <br><small class="admin-info">Users can't access to site without purchasing any pro package. (Note: Pro system should be enabled)</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="require_subcription" value="off" />
+                            <input type="checkbox" name="require_subcription" id="chck-require_subcription" value="on" <?php echo ($pt->config->require_subcription == 'on') ? 'checked': '';?>>
+                            <label for="chck-require_subcription" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="float-left">
+                            <label for="pro_google" class="main-label">Allow Google Analytics for Pro Memebers</label>
+                            <br><small class="admin-info">Pro users can set google analytics and use it on their own channel.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="pro_google" value="off" />
+                            <input type="checkbox" name="pro_google" id="chck-pro_google" value="on" <?php echo ($pt->config->pro_google == 'on') ? 'checked': '';?>>
+                            <label for="chck-pro_google" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                         <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Pro Package Price</label>
+                                <input type="text" name="pro_pkg_price" class="form-control" value="<?php echo ($pt->config->pro_pkg_price);?>">
+                                <small class="admin-info">Set the price for PRO package.</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Free Users Import Limit</label>
+                                <input type="text" name="user_max_import" class="form-control" value="<?php echo ($pt->config->user_max_import);?>">
+                                <small class="admin-info"></small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="p_f_users_" <?php if($pt->config->upload_system_type == 0){ ?> class="hidden" <?php } ?>>
+                            <label for="max_upload_free_users">Free Users (Not PRO) Upload Limit</label>
+                            <br><small class="admin-info">Set the limit for NOT pro users.</small>
+                            <div class="form-group">
+                                <select class="form-control show-tick" id="max_upload_free_users" name="max_upload_free_users">
+                                    <option value="1" <?php if($pt->config->max_upload_free_users == '1'){ echo "selected";} ?>>0</option>
+                                    <option value="2000000" <?php if($pt->config->max_upload_free_users == '2000000'){ echo "selected";} ?>>2MB</option>
+                                    <option value="6000000" <?php if($pt->config->max_upload_free_users == '6000000'){ echo "selected";} ?>>6MB</option>
+                                    <option value="12000000" <?php if($pt->config->max_upload_free_users == '12000000'){ echo "selected";} ?>>12MB</option>
+                                    <option value="24000000" <?php if($pt->config->max_upload_free_users == '24000000'){ echo "selected";} ?>>24MB</option>
+                                    <option value="48000000" <?php if($pt->config->max_upload_free_users == '48000000'){ echo "selected";} ?>>48MB</option>
+                                    <option value="96000000" <?php if($pt->config->max_upload_free_users == '96000000'){ echo "selected";} ?>>96MB</option>
+                                    <option value="256000000" <?php if($pt->config->max_upload_free_users == '256000000'){ echo "selected";} ?>>256MB</option>
+                                    <option value="512000000" <?php if($pt->config->max_upload_free_users == '512000000'){ echo "selected";} ?>>512MB</option>
+                                    <option value="1000000000" <?php if($pt->config->max_upload_free_users == '1000000000'){ echo "selected";} ?>>1GB</option>
+                                    <option value="10000000000" <?php if($pt->config->max_upload_free_users == '10000000000'){ echo "selected";} ?>>10GB</option>
+                                    <option value="0" <?php if($pt->config->max_upload_free_users == '0'){ echo "selected";} ?>>Unlimited</option>
+                                </select>
+                            </div>
+                            <hr>
+                            <label for="max_upload_pro_users">Pro Memebers Upload Limit</label>
+                            <br><small class="admin-info">Set the limit for pro memebers.</small>
+                            <div class="form-group">
+                                <select class="form-control show-tick" id="max_upload_pro_users" name="max_upload_pro_users">
+                                    <option value="2000000" <?php if($pt->config->max_upload_pro_users == '2000000'){ echo "selected";} ?>>2MB</option>
+                                    <option value="6000000" <?php if($pt->config->max_upload_pro_users == '6000000'){ echo "selected";} ?>>6MB</option>
+                                    <option value="12000000" <?php if($pt->config->max_upload_pro_users == '12000000'){ echo "selected";} ?>>12MB</option>
+                                    <option value="24000000" <?php if($pt->config->max_upload_pro_users == '24000000'){ echo "selected";} ?>>24MB</option>
+                                    <option value="48000000" <?php if($pt->config->max_upload_pro_users == '48000000'){ echo "selected";} ?>>48MB</option>
+                                    <option value="96000000" <?php if($pt->config->max_upload_pro_users == '96000000'){ echo "selected";} ?>>96MB</option>
+                                    <option value="256000000" <?php if($pt->config->max_upload_pro_users == '256000000'){ echo "selected";} ?>>256MB</option>
+                                    <option value="512000000" <?php if($pt->config->max_upload_pro_users == '512000000'){ echo "selected";} ?>>512MB</option>
+                                    <option value="1000000000" <?php if($pt->config->max_upload_pro_users == '1000000000'){ echo "selected";} ?>>1GB</option>
+                                    <option value="10000000000" <?php if($pt->config->max_upload_pro_users == '10000000000'){ echo "selected";} ?>>10GB</option>
+                                    <option value="0" <?php if($pt->config->max_upload_pro_users == '0'){ echo "selected";} ?>>Unlimited</option>
+                                </select>
+                            </div>
+                        </div>
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <!-- #END# Vertical Layout -->
+<script>
+
+
+function PT_RemoveSubscriptions(type,self){
+    if (!type || type != 'expired' || !self){
+        return false;
+    }
+
+    else if(type == 'expired'){
+        $(self).text("{{LANG please_wait}}").attr('disabled', 'true');
+        $.ajax({
+            url: '{{LINK aj/go_pro/remove_expired}}',
+            type: 'GET',
+            dataType: 'json'
+        })
+        .done(function() {
+            $('.payment-settings-alert').html('<i class="fa fa-check"></i> Expired Subscriptions was deleted successfully!');
+            setTimeout(function () {
+                $('.payment-settings-alert').empty();
+            }, 2000);
+            $(self).text('Cancel Expired Subscriptions').removeAttr('disabled');
+        })
+        .fail(function() {
+            console.log("error");
+        })
+    }
+}
+
+$(function() {
+    $('.switcher input[type=checkbox]').click(function () {
+        var configName = $(this).attr('name');
+        var hash_id = $('input[name=hash_id]').val();
+        var objData = {};
+        if ($(this).is(":checked") === true) {
+            objData[configName] = $(this).val();
+        }
+        else{
+            if ($('input[name='+configName+']')[0]) {
+                objData[configName] = $($('input[name='+configName+']')[0]).val();
+            }
+        }
+        objData['hash_id'] = hash_id;
+        $.post('{{LINK aj/ap/save-settings}}', objData);
+    });
+
+    var setTimeOutColor = setTimeout(function (){});
+    $('select').on('change', function() {
+         clearTimeout(setTimeOutColor);
+        var thisElement = $(this);
+        var configName = thisElement.attr('name');
+        var hash_id = $('input[name=hash_id]').val();
+        var objData = {};
+        objData[configName] = this.value;
+        objData['hash_id'] = hash_id;
+        thisElement.addClass('warning');
+        $.post("{{LINK aj/ap/save-settings}}", objData, function (data) {
+            if (data.status == 200) {
+                thisElement.removeClass('warning');
+                thisElement.addClass('success');
+            } else {
+                thisElement.addClass('error');
+            }
+            var setTimeOutColor = setTimeout(function () {
+                thisElement.removeClass('success');
+                thisElement.removeClass('warning');
+                thisElement.removeClass('error');
+            }, 2000);
+        });
+    });
+    $('input[type=text], input[type=number] , textarea').on('keyup', delay(function() {
+            clearTimeout(setTimeOutColor);
+            var thisElement = $(this);
+            var configName = thisElement.attr('name');
+            var hash_id = $('input[name=hash_id]').val();
+            var objData = {};
+            objData[configName] = this.value;
+            objData['hash_id'] = hash_id;
+            thisElement.addClass('warning');
+            $.post("{{LINK aj/ap/save-settings}}", objData, function (data) {
+                if (data.status == 200) {
+                    thisElement.removeClass('warning');
+                    thisElement.addClass('success');
+                } else {
+                    thisElement.addClass('error');
+                }
+                var setTimeOutColor = setTimeout(function () {
+                    thisElement.removeClass('success');
+                    thisElement.removeClass('warning');
+                    thisElement.removeClass('error');
+                }, 2000);
+                //thisElement.focus();
+            });
+    }, 500));
+});
+</script>

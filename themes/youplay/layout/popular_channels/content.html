@@ -1,0 +1,44 @@
+<div class="pt_page_headr">
+	<h4 class="page_head"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill-rule="evenodd" fill="currentColor" d="M12 1.25C12.2841 1.25 12.5438 1.4105 12.6708 1.66459L15.5 7.32299L21.1233 8.2602C21.4004 8.30639 21.6285 8.50358 21.7142 8.77112C21.8 9.03866 21.729 9.33167 21.5304 9.53033L17.3243 13.7364L18.7308 19.8314C18.7961 20.1143 18.6922 20.4096 18.464 20.5893C18.2358 20.7689 17.9244 20.8007 17.6646 20.6708L12 17.8385L6.33543 20.6708C6.07566 20.8007 5.76425 20.7689 5.53606 20.5893C5.30787 20.4096 5.20392 20.1143 5.26923 19.8314L6.67576 13.7364L2.46969 9.53033C2.27104 9.33167 2.20006 9.03866 2.2858 8.77112C2.37154 8.50358 2.5996 8.30639 2.87672 8.2602L8.5 7.32299L11.3292 1.66459C11.4563 1.4105 11.7159 1.25 12 1.25ZM12 3.67705L9.67084 8.33541C9.56353 8.55003 9.36001 8.70035 9.12332 8.7398L4.56088 9.5002L8.03035 12.9697C8.2132 13.1525 8.28896 13.4167 8.23081 13.6686L7.08887 18.617L11.6646 16.3292C11.8758 16.2236 12.1243 16.2236 12.3354 16.3292L16.9112 18.617L15.7692 13.6686C15.7111 13.4167 15.7868 13.1525 15.9697 12.9697L19.4392 9.5002L14.8767 8.7398C14.64 8.70035 14.4365 8.55003 14.3292 8.33541L12 3.67705Z"></path></svg> {{LANG popular_channels}}</h4>
+</div>
+
+<div class="row">
+	<div class="col-md-7 vid_pop_chnl_filtr">
+		<span>{{LANG filter_by}}</span>
+		<select name="type" class="form-group form-control" id="sort_channels_by">
+			<option value="views" <?php echo ($pt->type == 'views') ? 'selected': '';?>>{{LANG views}}</option>
+			<option value="subscribers" <?php echo ($pt->type == 'subscribers') ? 'selected': '';?>>{{LANG subscribers}}</option>
+			<option value="most_active" <?php echo ($pt->type == 'most_active') ? 'selected': '';?>>{{LANG most_active}}</option>
+		</select>
+		<select id="sort_channels_type" name="type" class="form-group form-control">
+			<option value="today" <?php echo ($pt->cat_type == 'today') ? 'selected': '';?>>{{LANG today}}</option>
+			<option value="this_week" <?php echo ($pt->cat_type == 'this_week') ? 'selected': '';?>>{{LANG this_week}}</option>
+			<option value="this_month" <?php echo ($pt->cat_type == 'this_month') ? 'selected': '';?>>{{LANG this_month}}</option>
+			<option value="this_year" <?php echo ($pt->cat_type == 'this_year') ? 'selected': '';?>>{{LANG this_year}}</option>
+			<option value="all_time" <?php echo ($pt->cat_type == 'all_time') ? 'selected': '';?>>{{LANG all_time}}</option>
+		</select>
+		<button id="submit" name="submit" class="btn btn-main">{{LANG submit}}</button>
+   </div> 
+   <div class="col-md-2"></div>
+   <div class="col-md-3"></div>
+</div>
+		
+<div class="row author-list">
+	{{CHANNELS}}
+</div>
+
+<div class="clear"></div>
+<?php if ($pt->channels_count > 1) { ?>
+	<div class="watch-video-show-more desc load-more" data-type="popular_channels" data-sort-by="<?php echo ($pt->type);?>" <?php if (!empty($pt->cat_type)) { ?> data-sort-type="<?php echo ($pt->cat_type);?>"<?php } ?>>{{LANG show_more}}</div>
+<?php } ?>
+
+<div class="clear"></div>
+
+<script type="text/javascript">
+	$('#submit').on('click', function(event) {
+		var sort_by = $('#sort_channels_by').val();
+		var sort_type = $('#sort_channels_type').val();
+		$('#link_redirect_to_page').attr('data-load', '?link1=popular_channels&type='+sort_by+'&sort_type='+sort_type);
+		$('#link_redirect_to_page').click();
+	});
+</script>

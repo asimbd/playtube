@@ -1,0 +1,166 @@
+<div class="container-fluid">
+    <div>
+        <h3>E-mail Setup</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Admin Panel</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">E-mail Setup</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-8 col-md-8 ">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">E-mail Configuration</h6>
+                    <div class="email-settings-alert"></div>
+                    <form class="email-settings" method="POST">
+                        <label for="smtp_or_mail">Server Type</label>
+                        <br><small class="admin-info">Select which E-mail server you want to use, Server Mail function is not recommended.</small>
+                        <div class="form-group">
+                            <select class="form-control show-tick" id="smtp_or_mail" name="smtp_or_mail">
+                              <option value="smtp" <?php echo ($pt->config->smtp_or_mail == 'smtp') ? 'selected': '';?>>SMTP Server</option>
+                              <option value="mail" <?php echo ($pt->config->smtp_or_mail == 'mail') ? 'selected': '';?>>Server Mail (Default)</option>
+                            </select>
+                        </div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">SMTP Host</label>
+                                <input type="text" name="smtp_host" class="form-control" value="<?php echo ($pt->config->smtp_host);?>">
+                                <small class="admin-info">Your SMTP account host name, can be IP, domain or subdomain.</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">SMTP Username</label>
+                                <input type="text" name="smtp_username" class="form-control" value="<?php echo ($pt->config->smtp_username);?>">
+                                <small class="admin-info">Your SMTP account username.</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">SMTP Password</label>
+                                <input type="text" name="smtp_password" class="form-control" value="<?php echo ($pt->config->smtp_password);?>">
+                                <small class="admin-info">Your SMTP account password.</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">SMTP Port</label>
+                                <input type="text" name="smtp_port" class="form-control" value="<?php echo ($pt->config->smtp_port);?>">
+                                <small class="admin-info">Which port does your SMTP server use? most used 587 for TLS, and 465 for SSL encryption.</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <label for="smtp_encryption">SMTP Encryption</label>
+                        <br><small class="admin-info">Which encryption method does your SMTP server use?</small>
+                        <div class="form-group">
+                            <select class="form-control show-tick" id="smtp_encryption" name="smtp_encryption">
+                              <option value="tls" <?php echo ($pt->config->smtp_encryption == 'tls') ? 'selected': '';?>>TLS</option>
+                              <option value="ssl" <?php echo ($pt->config->smtp_encryption == 'ssl') ? 'selected': '';?>>SSL</option>
+                            </select>
+                        </div>
+                        <br>
+                        <button type="button" class="btn btn-warning m-t-15 waves-effect" onclick="Pt_TestMessage();">Test E-mail Server</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+    $('.switcher input[type=checkbox]').click(function () {
+        var configName = $(this).attr('name');
+        var hash_id = $('input[name=hash_id]').val();
+        var objData = {};
+        if ($(this).is(":checked") === true) {
+            objData[configName] = $(this).val();
+        }
+        else{
+            if ($('input[name='+configName+']')[0]) {
+                objData[configName] = $($('input[name='+configName+']')[0]).val();
+            }
+        }
+        objData['hash_id'] = hash_id;
+        $.post('{{LINK aj/ap/save-settings}}', objData);
+    });
+
+    var setTimeOutColor = setTimeout(function (){});
+    $('select').on('change', function() {
+         clearTimeout(setTimeOutColor);
+        var thisElement = $(this);
+        var configName = thisElement.attr('name');
+        var hash_id = $('input[name=hash_id]').val();
+        var objData = {};
+        objData[configName] = this.value;
+        objData['hash_id'] = hash_id;
+        thisElement.addClass('warning');
+        $.post("{{LINK aj/ap/save-settings}}", objData, function (data) {
+            if (data.status == 200) {
+                thisElement.removeClass('warning');
+                thisElement.addClass('success');
+            } else {
+                thisElement.addClass('error');
+            }
+            var setTimeOutColor = setTimeout(function () {
+                thisElement.removeClass('success');
+                thisElement.removeClass('warning');
+                thisElement.removeClass('error');
+            }, 2000);
+        });
+    });
+    $('input[type=text], input[type=number] , textarea').on('keyup', delay(function() {
+            clearTimeout(setTimeOutColor);
+            var thisElement = $(this);
+            var configName = thisElement.attr('name');
+            var hash_id = $('input[name=hash_id]').val();
+            var objData = {};
+            objData[configName] = this.value;
+            objData['hash_id'] = hash_id;
+            thisElement.addClass('warning');
+            $.post("{{LINK aj/ap/save-settings}}", objData, function (data) {
+                if (data.status == 200) {
+                    thisElement.removeClass('warning');
+                    thisElement.addClass('success');
+                } else {
+                    thisElement.addClass('error');
+                }
+                var setTimeOutColor = setTimeout(function () {
+                    thisElement.removeClass('success');
+                    thisElement.removeClass('warning');
+                    thisElement.removeClass('error');
+                }, 2000);
+                //thisElement.focus();
+            });
+    }, 500));
+});
+function Pt_TestMessage() {
+    $('form.email-settings').find('.btn-warning').text('Please wait..');
+    $.get('{{LINK aj/ap/test_message}}', function (data) {
+        if (data.status == 200) {
+            $('.email-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Message sent!</div>');
+            setTimeout(function () {
+                $('.email-settings-alert').empty();
+            }, 2000);
+        } else {
+            $('.email-settings-alert').html('<div class="alert alert-danger">Message failed to sent, error: '+data.error+'</div>');
+            setTimeout(function () {
+                $('.email-settings-alert').empty();
+            }, 2000);
+        }
+        $('form.email-settings').find('.btn-warning').text('Test E-mail Server');
+    });
+}
+</script>
